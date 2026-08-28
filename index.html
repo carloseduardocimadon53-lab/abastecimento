@@ -2,20 +2,1084 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agro São Francisco</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abastecimento — Agro São Francisco</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00401f">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Abastecimento">
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#00401f;color:#fff;font-family:system-ui,-apple-system,sans-serif;text-align:center}
-  .box{padding:32px}
-  h1{font-size:22px;margin:0 0 8px}
-  p{color:#8fc30b;margin:0;font-weight:600}
+  :root{
+    --bg:#f5f6f0; --surface:#fff; --surface-2:#eef1e6;
+    --text:#1b2318; --text-muted:#5c6555; --border:#dde2d3;
+    --primary:#00401f; --primary-dark:#002a14; --primary-tint:#e6f2e6; --on-primary:#fff;
+    --lime:#8fc30b; --gold:#fdc500; --gold-tint:#fff6da;
+    --danger:#b3261e; --danger-tint:#fbe9e7; --ok-tint:#e7f2e4;
+    --radius:12px;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+    --header:linear-gradient(135deg,#00311a 0%,#0b4a22 55%,#146b2e 100%);
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c6555' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#12160f; --surface:#1c2117; --surface-2:#242b1d;
+    --text:#eef0e6; --text-muted:#a6ae99; --border:#333c29;
+    --primary:#3fbf57; --primary-dark:#8fe39c; --primary-tint:#193821; --on-primary:#062a14;
+    --lime:#b3e034; --gold:#ffd84d; --gold-tint:#3a2f10;
+    --danger:#e5837c; --danger-tint:#3a2320; --ok-tint:#1f3320;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a6ae99' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }}
+  :root[data-theme="dark"]{
+    --bg:#12160f; --surface:#1c2117; --surface-2:#242b1d;
+    --text:#eef0e6; --text-muted:#a6ae99; --border:#333c29;
+    --primary:#3fbf57; --primary-dark:#8fe39c; --primary-tint:#193821; --on-primary:#062a14;
+    --lime:#b3e034; --gold:#ffd84d; --gold-tint:#3a2f10;
+    --danger:#e5837c; --danger-tint:#3a2320; --ok-tint:#1f3320;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+    --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a6ae99' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  #root{max-width:1180px;margin:0 auto;padding-bottom:48px}
+  .topbar{background:var(--header);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10;
+    box-shadow:var(--shadow);padding-top:calc(14px + env(safe-area-inset-top))}
+  .topbar-inner{display:flex;align-items:center;gap:12px}
+  .logo{width:42px;height:42px;min-width:42px;border-radius:50%;background:#fff;overflow:hidden;
+    display:flex;align-items:center;justify-content:center}
+  .logo img{width:32px;height:32px;object-fit:contain}
+  .eyebrow{margin:0 0 2px;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.82)}
+  .topbar h1{margin:0;font-size:17px;font-weight:700;line-height:1.2}
+  .who{margin-left:auto;text-align:right;font-size:11.5px;color:rgba(255,255,255,.85);line-height:1.35}
+  .tabs{display:flex;gap:5px;padding:9px 10px 0;background:var(--header)}
+  .tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(255,255,255,.14);
+    color:#fff;border:none;padding:10px 4px;border-radius:10px 10px 0 0;font-size:12.5px;font-weight:600;
+    cursor:pointer;opacity:.85;font-family:inherit}
+  .tab-btn.active{background:var(--bg);color:var(--primary-dark);opacity:1;box-shadow:inset 0 -3px 0 var(--lime)}
+  .content{padding:16px}
+  @media (min-width:900px){.content{padding:24px 28px}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+  @media (min-width:900px){.card{padding:20px 22px}}
+  .card h2{margin:0 0 4px;font-size:16px;display:flex;align-items:center;gap:8px}
+  .card h2 .ic{color:var(--primary);width:19px;height:19px;flex-shrink:0}
+  .hint{color:var(--text-muted);font-size:12.5px;margin:0 0 12px;line-height:1.5}
+  label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+  label.req::after{content:" *";color:var(--danger)}
+  input[type=text],input[type=number],input[type=password],input[type=email],
+  input[type=date],input[type=time],select,textarea{
+    width:100%;padding:11px 12px;border-radius:9px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text);font-size:16px;font-family:inherit}
+  select{appearance:none;-webkit-appearance:none;background-image:var(--chev);
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:38px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:1px}
+  textarea{resize:vertical;min-height:64px}
+  .fi{position:relative}
+  .fi .ii{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);width:18px;height:18px}
+  .fi input,.fi select{padding-left:40px}
+  .fi.top .ii{top:16px;transform:none}
+  .fi.top textarea{padding-left:40px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:520px){.row2{grid-template-columns:1fr}}
+  @media (min-width:900px){.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--primary);
+    color:var(--on-primary);border:none;border-radius:9px;padding:13px 18px;font-size:15px;font-weight:700;
+    cursor:pointer;width:100%;margin-top:16px;font-family:inherit}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn.sec{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+  .btn.dan{background:var(--danger-tint);color:var(--danger);border:1px solid var(--danger)}
+  .btn.sm{width:auto;padding:8px 13px;font-size:13px;margin-top:0}
+  .btn .ic{width:17px;height:17px;flex-shrink:0}
+  .msg{border-radius:9px;padding:10px 12px;font-size:13.5px;margin-top:10px;line-height:1.5}
+  .msg.ok{background:var(--ok-tint);color:var(--primary-dark)}
+  .msg.err{background:var(--danger-tint);color:var(--danger)}
+  .msg.info{background:var(--surface-2);color:var(--text-muted)}
+  .steps{display:flex;gap:7px;margin:2px 0 16px;flex-wrap:wrap}
+  .step-btn{flex:1;min-width:110px;display:flex;align-items:center;gap:8px;background:var(--surface-2);
+    border:1px solid var(--border);color:var(--text-muted);border-radius:10px;padding:9px 11px;
+    font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left}
+  .step-num{width:21px;height:21px;border-radius:50%;background:var(--border);color:var(--text);
+    display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;flex-shrink:0}
+  .step-btn.active{background:var(--primary-tint);border-color:var(--primary);color:var(--primary-dark)}
+  .step-btn.active .step-num{background:var(--primary);color:var(--on-primary)}
+  .step-btn.done .step-num{background:var(--lime);color:#00311a}
+  .panel{display:none}.panel.active{display:block}
+  .nav{display:flex;gap:10px;margin-top:18px}.nav .btn{margin-top:0}
+  .plots{border:1px solid var(--border);border-radius:10px;max-height:340px;overflow-y:auto;margin-top:8px}
+  .plot{display:flex;align-items:center;gap:11px;padding:11px 13px;border-bottom:1px solid var(--border);cursor:pointer}
+  .plot:last-child{border-bottom:none}
+  .plot.on{background:var(--primary-tint)}
+  .plot input{width:20px;height:20px;min-width:20px;accent-color:var(--primary);margin:0}
+  .plot-n{font-size:14px;font-weight:600;flex:1}
+  .plot-ha{font-size:13px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+  .sum{display:flex;justify-content:space-between;align-items:center;background:var(--primary-tint);
+    border-radius:9px;padding:11px 13px;margin-top:10px;font-size:13.5px;font-weight:700;color:var(--primary-dark)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:4px}
+  .stat{background:var(--primary-tint);border-radius:10px;padding:12px}
+  .stat .n{font-size:19px;font-weight:800;color:var(--primary-dark);font-variant-numeric:tabular-nums}
+  .stat .l{font-size:11.5px;color:var(--text-muted);margin-top:2px}
+  .an{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:14px;align-items:start}
+  .an .card{margin-bottom:0}
+  .bars{display:flex;flex-direction:column;gap:11px;margin-top:14px}
+  .bar{display:grid;grid-template-columns:1fr auto;gap:4px 10px}
+  .bar-l{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-v{font-size:13px;font-weight:700;color:var(--text-muted);font-variant-numeric:tabular-nums}
+  .bar-t{grid-column:1/-1;height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+  .bar-f{height:100%;border-radius:5px;background:var(--primary);min-width:2px}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:14px}
+  .spark-c{flex:1;min-width:3px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+  .spark-b{background:var(--primary);border-radius:4px 4px 0 0;min-height:2px}
+  .spark-x{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--text-muted)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--border);white-space:nowrap}
+  th{color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.02em}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tw{overflow-x:auto;margin-top:10px;border-radius:9px}
+  .empty{color:var(--text-muted);font-size:13.5px;text-align:center;padding:22px 10px;line-height:1.5}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .chip{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:999px;padding:5px 6px 5px 12px;font-size:13px}
+  .chip button{background:none;border:none;color:var(--danger);cursor:pointer;font-size:16px;
+    width:22px;height:22px;line-height:1;border-radius:50%;font-family:inherit}
+  .addrow{display:flex;gap:8px;align-items:flex-end;margin-top:8px}
+  .addrow>div{flex:1}
+  .badge{display:inline-block;background:var(--surface-2);color:var(--text-muted);border-radius:999px;
+    padding:2px 8px;font-size:11px;margin-left:6px}
+  .sync{position:sticky;top:0;z-index:9;display:flex;align-items:center;gap:9px;padding:10px 16px;
+    font-size:13px;font-weight:600;line-height:1.4}
+  .sync.wait{background:var(--gold-tint);color:var(--primary-dark);border-bottom:1px solid var(--gold)}
+  .sync.off{background:var(--danger-tint);color:var(--danger);border-bottom:1px solid var(--danger)}
+  .sub{font-size:13px;font-weight:700;margin:18px 0 6px}
+  .login-wrap{max-width:380px;margin:0 auto;padding:36px 16px}
+  .login-logo{display:flex;justify-content:center;margin-bottom:18px}
+  .login-logo img{width:96px;height:96px}
+  .foot{color:var(--text-muted);font-size:11.5px;text-align:center;margin-top:14px;padding:0 16px;line-height:1.5}
+  .ic{width:18px;height:18px;flex-shrink:0}
+  .srch{margin-top:10px}
 </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Agro São Francisco</h1>
-    <p>Está funcionando!</p>
-  </div>
+<div id="root"></div>
+
+<script type="module">
+"use strict";
+
+/* ============================================================
+   1. CONFIGURAÇÃO DO FIREBASE
+   Estas chaves são públicas de propósito — todo app Firebase as
+   traz no código. Quem protege o banco são as Regras de acesso.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAiaEKu7fUePmgWb8rWQCu2TpwMeyjZj4o",
+  authDomain: "agro-sao-francisco-88fa2.firebaseapp.com",
+  databaseURL: "https://agro-sao-francisco-88fa2-default-rtdb.firebaseio.com",
+  projectId: "agro-sao-francisco-88fa2",
+  storageBucket: "agro-sao-francisco-88fa2.firebasestorage.app",
+  messagingSenderId: "852315062448",
+  appId: "1:852315062448:web:9b9508e69d4e036d5f7b75"
+};
+const SDK = "https://www.gstatic.com/firebasejs/12.18.0/";
+
+/* ============================================================
+   2. UTILIDADES
+   ============================================================ */
+const K_CFG = 'asf_cfg_v1', K_OUT = 'asf_outbox_v1', K_UI = 'asf_ui_v1';
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function num(n, casas){
+  const x = Number(n);
+  if (!isFinite(x)) return '0';
+  const d = casas == null ? 2 : casas;
+  return x.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: d });
+}
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+function agora(){
+  const d = new Date();
+  return {
+    date: d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()),
+    time: pad(d.getHours()) + ':' + pad(d.getMinutes())
+  };
+}
+function dataBR(iso){
+  if (!iso) return '';
+  const p = String(iso).split('-');
+  return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : iso;
+}
+function uid(){
+  return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+}
+function ler(k, padrao){
+  try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; }
+  catch(e){ return padrao; }
+}
+function gravar(k, v){
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){}
+}
+const ICO = {
+  user:'<circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/>',
+  pin:'<path d="M12 21s-6.5-5.8-6.5-11A6.5 6.5 0 0 1 12 3.5a6.5 6.5 0 0 1 6.5 6.5c0 5.2-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+  truck:'<rect x="2.5" y="9" width="11" height="7" rx="1.2"/><path d="M13.5 11h4l3 3v2h-2"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>',
+  tag:'<path d="M3 12V5a2 2 0 0 1 2-2h7l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.5"/>',
+  drop:'<path d="M12 2.5s6.5 7.5 6.5 12A6.5 6.5 0 1 1 5.5 14.5C5.5 10 12 2.5 12 2.5z"/>',
+  gauge:'<circle cx="12" cy="13" r="8"/><line x1="12" y1="13" x2="15.5" y2="9.5"/><line x1="12" y1="5" x2="12" y2="6.5"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="12" x2="12" y2="7"/><line x1="12" y1="12" x2="15.5" y2="14"/>',
+  note:'<rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>',
+  map:'<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>',
+  chart:'<line x1="4" y1="20" x2="4" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="20" y1="20" x2="20" y2="14"/>',
+  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+  sliders:'<line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2"/><line x1="4" y1="17" x2="20" y2="17"/><circle cx="15" cy="17" r="2"/>',
+  edit:'<path d="M3 21l3.5-1 11-11-2.5-2.5-11 11L3 21z"/><line x1="14.5" y1="5.5" x2="17" y2="8"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  bolt:'<polygon points="13 2 4 14 11 14 10 22 20 9 13 9 13 2"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  cloud:'<path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11.7 1.5A3.5 3.5 0 0 0 7 18z"/>',
+  down:'<path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><line x1="4" y1="20" x2="20" y2="20"/>',
+  info:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="8.01"/><line x1="12" y1="11" x2="12" y2="16"/>',
+  out:'<path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><polyline points="9 8 5 12 9 16"/><line x1="5" y1="12" x2="15" y2="12"/>'
+};
+function ic(n, cls){
+  return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICO[n] || '') + '</svg>';
+}
+function h2(icone, texto, extra){
+  return '<h2>' + ic(icone, 'ic') + '<span>' + esc(texto) + '</span>' + (extra || '') + '</h2>';
+}
+
+/* ============================================================
+   3. CAMADA DO BANCO
+   Tudo que fala com o Firebase mora aqui. Nos testes automatizados
+   esta camada é substituída, então a lógica do app roda sem rede.
+   ============================================================ */
+async function criarBackend(){
+  if (window.__BACKEND__) return window.__BACKEND__;
+
+  const [appMod, authMod, dbMod] = await Promise.all([
+    import(SDK + 'firebase-app.js'),
+    import(SDK + 'firebase-auth.js'),
+    import(SDK + 'firebase-database.js')
+  ]);
+  const app = appMod.initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  const db = dbMod.getDatabase(app);
+  try { await authMod.setPersistence(auth, authMod.browserLocalPersistence); } catch(e){}
+
+  return {
+    onAuth(cb){ return authMod.onAuthStateChanged(auth, cb); },
+    async signIn(email, senha){
+      const cred = await authMod.signInWithEmailAndPassword(auth, email, senha);
+      return cred.user;
+    },
+    async signOut(){ return authMod.signOut(auth); },
+    async ehAdmin(u){
+      // As regras negam esta leitura para quem não é admin: o erro é a resposta.
+      try {
+        const s = await dbMod.get(dbMod.ref(db, 'admins/' + u));
+        return s.exists() && s.val() === true;
+      } catch(e){ return false; }
+    },
+    ouvirConfig(cb){
+      return dbMod.onValue(dbMod.ref(db, 'config'), s => cb(s.val() || {}), () => {});
+    },
+    ouvirRegistros(caminho, cb){
+      return dbMod.onValue(dbMod.ref(db, caminho), s => cb(s.val() || {}), () => {});
+    },
+    async gravarConfig(caminho, valor){
+      return dbMod.set(dbMod.ref(db, 'config/' + caminho), valor);
+    },
+    async gravarRegistro(u, id, rec){
+      return dbMod.set(dbMod.ref(db, 'records/' + u + '/' + id), rec);
+    },
+    async registroExiste(u, id){
+      try {
+        const s = await dbMod.get(dbMod.ref(db, 'records/' + u + '/' + id));
+        return s.exists();
+      } catch(e){ return false; }
+    }
+  };
+}
+
+/* ============================================================
+   4. ESTADO
+   ============================================================ */
+const S = {
+  backend: null,
+  user: null,
+  admin: false,
+  cfg: ler(K_CFG, { farms:{}, talhoes:{}, machines:{}, operationTypes:{}, employees:{} }),
+  registros: {},            // id -> registro (já achatado)
+  outbox: ler(K_OUT, []),   // registros aguardando envio
+  online: navigator.onLine,
+  pronto: false,
+  erroLogin: null,
+  entrando: false,
+  aba: (ler(K_UI, {}) || {}).aba || 'registrar',
+  etapa: 1,
+  form: { employeeName:'', farmId:'', machineId:'', opId:'', talhoes:[], busca:'' },
+  msg: null,
+  cadMsg: null,
+  periodo: '90'
+};
+S.form.employeeName = (ler(K_UI, {}) || {}).ultimoFuncionario || '';
+
+const lista = obj => Object.keys(obj || {}).map(id => Object.assign({ id }, obj[id]));
+const ordNome = a => a.sort((x, y) => String(x.nome).localeCompare(String(y.nome), 'pt-BR', { numeric:true }));
+const talhoesDaFazenda = fid => ordNome(lista(S.cfg.talhoes).filter(t => t.farmId === fid));
+const nomeFazenda = fid => (S.cfg.farms[fid] || {}).nome || '';
+
+/* ============================================================
+   5. RATEIO E CÁLCULOS
+   ============================================================ */
+// Divide os litros entre os talhões proporcionalmente à área de cada um.
+// Quando a soma das áreas é zero (talhão sem hectare cadastrado), divide igual
+// para não perder litros. O último recebe a sobra do arredondamento, de modo
+// que a soma das partes SEMPRE bate com o total abastecido.
+function ratear(litros, talhoes){
+  const n = talhoes.length;
+  if (!n) return [];
+  const total = talhoes.reduce((s, t) => s + (Number(t.ha) || 0), 0);
+  const out = talhoes.map(t => ({ id:t.id, nome:t.nome, ha:Number(t.ha) || 0, litros:0 }));
+  let acumulado = 0;
+  for (let i = 0; i < n; i++){
+    let parte;
+    if (i === n - 1) parte = litros - acumulado;
+    else {
+      parte = total > 0 ? (litros * (out[i].ha / total)) : (litros / n);
+      parte = Math.round(parte * 1e6) / 1e6;
+      acumulado += parte;
+    }
+    out[i].litros = Math.round(parte * 1e6) / 1e6;
+  }
+  return out;
+}
+
+function todosRegistros(){
+  const fila = S.outbox.map(o => Object.assign({}, o.rec, { id:o.id, _pendente:true }));
+  const salvos = Object.keys(S.registros).map(id => Object.assign({ id }, S.registros[id]));
+  const vistos = {};
+  return fila.concat(salvos).filter(r => {
+    if (vistos[r.id]) return false;
+    vistos[r.id] = 1; return true;
+  }).sort((a, b) => String((b.dateStr||'') + (b.timeStr||'')).localeCompare(String((a.dateStr||'') + (a.timeStr||''))));
+}
+
+function noPeriodo(regs){
+  if (S.periodo === 'all') return regs;
+  const d = new Date();
+  d.setDate(d.getDate() - Number(S.periodo));
+  const corte = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  return regs.filter(r => (r.dateStr || '') >= corte);
+}
+
+function somarPor(regs, campo){
+  const m = {};
+  regs.forEach(r => { const k = r[campo] || '(não informado)'; m[k] = (m[k] || 0) + (Number(r.liters) || 0); });
+  return Object.keys(m).map(k => ({ label:k, value:m[k] })).sort((a, b) => b.value - a.value);
+}
+
+// Litros por hectare de cada talhão: soma tudo que foi rateado para ele e
+// divide pela área. Um talhão abastecido 3 vezes soma as três parcelas.
+function litrosPorHectare(regs){
+  const m = {};
+  regs.forEach(r => (r.talhoes || []).forEach(t => {
+    if (!m[t.id]) m[t.id] = { nome:t.nome, ha:Number(t.ha) || 0, litros:0, vezes:0 };
+    m[t.id].litros += Number(t.litros) || 0;
+    m[t.id].vezes += 1;
+  }));
+  return Object.keys(m).map(id => Object.assign({ id }, m[id], {
+    lha: m[id].ha > 0 ? m[id].litros / m[id].ha : 0
+  })).filter(x => x.ha > 0).sort((a, b) => b.lha - a.lha);
+}
+
+// Consumo por hora de máquina: entre um abastecimento e o seguinte da mesma
+// máquina, os litros colocados cobrem as horas que o horímetro avançou.
+function consumoPorMaquina(regs){
+  const por = {};
+  regs.forEach(r => { (por[r.machine] = por[r.machine] || []).push(r); });
+  const out = [];
+  Object.keys(por).forEach(m => {
+    const l = por[m].slice().sort((a, b) => (Number(a.hourmeter)||0) - (Number(b.hourmeter)||0));
+    let litros = 0, horas = 0;
+    for (let i = 1; i < l.length; i++){
+      const dh = (Number(l[i].hourmeter)||0) - (Number(l[i-1].hourmeter)||0);
+      const li = Number(l[i].liters) || 0;
+      if (dh > 0 && dh < 2000 && li > 0){ litros += li; horas += dh; }
+    }
+    const totalL = por[m].reduce((s, r) => s + (Number(r.liters)||0), 0);
+    const totalHa = por[m].reduce((s, r) => s + (Number(r.totalHa)||0), 0);
+    out.push({ maquina:m, lph: horas > 0 ? litros/horas : 0, horas, litros: totalL,
+               lha: totalHa > 0 ? totalL/totalHa : 0 });
+  });
+  return out.sort((a, b) => b.litros - a.litros);
+}
+
+function alertas(regs, cons){
+  const out = [];
+  const por = {};
+  regs.forEach(r => { (por[r.machine] = por[r.machine] || []).push(r); });
+  Object.keys(por).forEach(m => {
+    const l = por[m].slice().sort((a, b) =>
+      String((a.dateStr||'')+(a.timeStr||'')).localeCompare(String((b.dateStr||'')+(b.timeStr||''))));
+    for (let i = 1; i < l.length; i++){
+      const p = Number(l[i-1].hourmeter)||0, c = Number(l[i].hourmeter)||0;
+      if (c < p) out.push('Horímetro de <b>' + esc(m) + '</b> em ' + dataBR(l[i].dateStr) +
+        ' está em ' + num(c) + ', menor que o do abastecimento anterior (' + num(p) + '). Provável erro de digitação.');
+    }
+  });
+  const comLph = cons.filter(c => c.lph > 0);
+  if (comLph.length >= 3){
+    const v = comLph.map(c => c.lph).sort((a, b) => a - b);
+    const mid = Math.floor(v.length/2);
+    const med = v.length % 2 ? v[mid] : (v[mid-1] + v[mid]) / 2;
+    comLph.forEach(c => {
+      if (med > 0 && c.lph > med * 1.5)
+        out.push('<b>' + esc(c.maquina) + '</b> está consumindo ' + num(c.lph) +
+          ' L/h, bem acima da mediana da frota (' + num(med) + ' L/h). Vale conferir regulagem, vazamento ou uso.');
+    });
+  }
+  return out;
+}
+
+/* ============================================================
+   6. FILA OFFLINE
+   O registro é guardado no aparelho ANTES de tentar subir. O id é
+   gerado aqui, então reenviar o mesmo item nunca duplica no banco.
+   ============================================================ */
+function enfileirar(id, rec){
+  S.outbox.push({ id, rec, tentativas:0 });
+  gravar(K_OUT, S.outbox);
+}
+let enviando = false;
+async function enviarFila(){
+  if (enviando || !S.backend || !S.user || !S.outbox.length) return;
+  if (!navigator.onLine) return;
+  enviando = true;
+  try {
+    const restantes = [];
+    for (const item of S.outbox){
+      try {
+        await S.backend.gravarRegistro(S.user.uid, item.id, item.rec);
+      } catch(e){
+        // Pode ter subido antes de a resposta chegar: as regras impedem
+        // reescrever um registro que já existe, e isso vira "permission denied".
+        let jaEsta = false;
+        try { jaEsta = await S.backend.registroExiste(S.user.uid, item.id); } catch(_){}
+        if (!jaEsta){ item.tentativas = (item.tentativas || 0) + 1; restantes.push(item); }
+      }
+    }
+    S.outbox = restantes;
+    gravar(K_OUT, S.outbox);
+  } finally {
+    enviando = false;
+    render();
+  }
+}
+
+/* ============================================================
+   7. TELAS
+   ============================================================ */
+function telaLogin(){
+  return '<div class="login-wrap">' +
+    '<div class="login-logo"><img src="icon-192.png" alt="Agro São Francisco" style="border-radius:22px"></div>' +
+    '<div class="card">' +
+      h2('lock', 'Entrar') +
+      '<p class="hint">Use o login que o responsável pela fazenda passou para a equipe.</p>' +
+      '<label class="req">E-mail</label>' +
+      '<div class="fi">' + ic('user','ii') + '<input type="email" id="li_email" autocomplete="username" inputmode="email" autocapitalize="none"></div>' +
+      '<label class="req">Senha</label>' +
+      '<div class="fi">' + ic('lock','ii') + '<input type="password" id="li_senha" autocomplete="current-password"></div>' +
+      '<button class="btn" id="li_btn"' + (S.entrando ? ' disabled' : '') + '>' +
+        (S.entrando ? '<span>Entrando...</span>' : ic('lock') + '<span>Entrar</span>') + '</button>' +
+      (S.erroLogin ? '<div class="msg err">' + esc(S.erroLogin) + '</div>' : '') +
+    '</div>' +
+    '<p class="foot">Agro São Francisco · Controle de Abastecimento</p>' +
+  '</div>';
+}
+
+function barraSync(){
+  if (!S.online) return '<div class="sync off">' + ic('cloud') +
+    '<span>Sem internet. Pode registrar normalmente — ' +
+    (S.outbox.length ? S.outbox.length + ' registro(s) na fila, ' : '') + 'tudo sobe sozinho quando o sinal voltar.</span></div>';
+  if (S.outbox.length) return '<div class="sync wait">' + ic('cloud') +
+    '<span>' + S.outbox.length + ' registro(s) aguardando envio...</span></div>';
+  return '';
+}
+
+function topo(){
+  return '<div class="topbar"><div class="topbar-inner">' +
+    '<div class="logo"><img src="icon-192.png" alt=""></div>' +
+    '<div><p class="eyebrow">Agro São Francisco</p><h1>Abastecimento</h1></div>' +
+    '<div class="who">' + esc(S.user ? (S.admin ? 'Administrador' : 'Equipe') : '') +
+      '<br><a href="#" id="sairBtn" style="color:#fff;opacity:.8">sair</a></div>' +
+  '</div></div>';
+}
+
+function abas(){
+  const b = (id, txt, icone) => '<button class="tab-btn' + (S.aba === id ? ' active' : '') +
+    '" data-aba="' + id + '">' + ic(icone) + '<span>' + txt + '</span></button>';
+  let t = b('registrar', 'Registrar', 'edit') + b('registros', 'Registros', 'list');
+  if (S.admin) t += b('analise', 'Análise', 'chart') + b('cadastros', 'Cadastros', 'sliders');
+  return '<div class="tabs">' + t + '</div>';
+}
+
+function telaRegistrar(){
+  const n = agora();
+  const funcs = ordNome(lista(S.cfg.employees));
+  const fazendas = ordNome(lista(S.cfg.farms));
+  const maquinas = ordNome(lista(S.cfg.machines));
+  const ops = ordNome(lista(S.cfg.operationTypes));
+  const falta = [];
+  if (!maquinas.length) falta.push('máquinas');
+  if (!funcs.length) falta.push('funcionários');
+
+  const sel = (id, itens, valor, rotulo, icone) =>
+    '<div class="fi">' + ic(icone, 'ii') + '<select id="' + id + '"><option value="">' + rotulo + '</option>' +
+    itens.map(i => '<option value="' + esc(i.id) + '"' + (valor === i.id ? ' selected' : '') + '>' +
+      esc(i.nome) + '</option>').join('') + '</select></div>';
+
+  const passo = (n2, txt, icone) => '<button type="button" class="step-btn' +
+    (S.etapa === n2 ? ' active' : (S.etapa > n2 ? ' done' : '')) + '" data-etapa="' + n2 + '">' +
+    '<span class="step-num">' + n2 + '</span>' + ic(icone) + '<span>' + txt + '</span></button>';
+
+  // ---- etapa 1
+  const e1 = '<div class="panel' + (S.etapa === 1 ? ' active' : '') + '" data-painel="1">' +
+    '<div class="f2">' +
+      '<div><label class="req">Funcionário</label>' +
+        '<div class="fi">' + ic('user','ii') + '<select id="f_emp"><option value="">Quem está abastecendo?</option>' +
+        funcs.map(f => '<option value="' + esc(f.nome) + '"' +
+          (S.form.employeeName === f.nome ? ' selected' : '') + '>' + esc(f.nome) + '</option>').join('') +
+        '</select></div></div>' +
+      '<div><label class="req">Fazenda</label>' + sel('f_farm', fazendas, S.form.farmId, 'Selecione a fazenda', 'pin') + '</div>' +
+      '<div><label class="req">Máquina</label>' + sel('f_mach', maquinas, S.form.machineId, 'Selecione a máquina', 'truck') + '</div>' +
+      '<div><label class="req">Operação</label>' + sel('f_op', ops, S.form.opId, 'Selecione a operação', 'tag') + '</div>' +
+    '</div>' +
+    '<div class="nav"><button type="button" class="btn" data-ir="2"><span>Continuar</span></button></div>' +
+  '</div>';
+
+  // ---- etapa 2 (talhões)
+  const doFarm = S.form.farmId ? talhoesDaFazenda(S.form.farmId) : [];
+  const busca = (S.form.busca || '').toLowerCase();
+  const visiveis = busca ? doFarm.filter(t => t.nome.toLowerCase().includes(busca)) : doFarm;
+  const marcados = doFarm.filter(t => S.form.talhoes.includes(t.id));
+  const somaHa = marcados.reduce((s, t) => s + (Number(t.ha) || 0), 0);
+
+  let listaHtml;
+  if (!S.form.farmId) listaHtml = '<div class="empty">Escolha a fazenda na etapa 1 para ver os talhões.</div>';
+  else if (!doFarm.length) listaHtml = '<div class="empty">Nenhum talhão cadastrado nesta fazenda.</div>';
+  else if (!visiveis.length) listaHtml = '<div class="empty">Nenhum talhão encontrado com esse nome.</div>';
+  else listaHtml = '<div class="plots">' + visiveis.map(t =>
+    '<label class="plot' + (S.form.talhoes.includes(t.id) ? ' on' : '') + '">' +
+      '<input type="checkbox" data-talhao="' + esc(t.id) + '"' +
+        (S.form.talhoes.includes(t.id) ? ' checked' : '') + '>' +
+      '<span class="plot-n">' + esc(t.nome) + '</span>' +
+      '<span class="plot-ha">' + num(t.ha) + ' ha</span>' +
+    '</label>').join('') + '</div>';
+
+  const e2 = '<div class="panel' + (S.etapa === 2 ? ' active' : '') + '" data-painel="2">' +
+    '<p class="hint">Marque todos os talhões que a máquina vai atender com este tanque. Os litros serão divididos entre eles pelo tamanho de cada um.</p>' +
+    (doFarm.length > 8 ? '<div class="fi srch">' + ic('map','ii') +
+      '<input type="text" id="f_busca" placeholder="Buscar talhão..." value="' + esc(S.form.busca) + '"></div>' : '') +
+    listaHtml +
+    '<div class="sum"><span>' + marcados.length + ' talhão(ões) selecionado(s)</span><span>' + num(somaHa) + ' ha</span></div>' +
+    '<div class="nav">' +
+      '<button type="button" class="btn sec" data-ir="1"><span>Voltar</span></button>' +
+      '<button type="button" class="btn" data-ir="3"><span>Continuar</span></button>' +
+    '</div>' +
+  '</div>';
+
+  // ---- etapa 3
+  const e3 = '<div class="panel' + (S.etapa === 3 ? ' active' : '') + '" data-painel="3">' +
+    '<div class="row2">' +
+      '<div><label class="req">Litros abastecidos</label>' +
+        '<div class="fi">' + ic('drop','ii') + '<input type="number" id="f_lit" min="0" step="0.1" inputmode="decimal" placeholder="0,0"></div></div>' +
+      '<div><label class="req">Horímetro</label>' +
+        '<div class="fi">' + ic('gauge','ii') + '<input type="number" id="f_hor" min="0" step="0.1" inputmode="decimal" placeholder="0,0"></div></div>' +
+    '</div>' +
+    '<label class="req">Quando</label>' +
+    '<div class="row2">' +
+      '<div class="fi">' + ic('cal','ii') + '<input type="date" id="f_data" value="' + n.date + '"></div>' +
+      '<div class="fi">' + ic('clock','ii') + '<input type="time" id="f_hora" value="' + n.time + '"></div>' +
+    '</div>' +
+    '<label>Observações (opcional)</label>' +
+    '<div class="fi top">' + ic('note','ii') + '<textarea id="f_obs" placeholder="Ex: tanque cheio, vazamento notado..."></textarea></div>' +
+    '<div class="nav">' +
+      '<button type="button" class="btn sec" data-ir="2"><span>Voltar</span></button>' +
+      '<button type="button" class="btn" id="salvarBtn">' + ic('plus') + '<span>Registrar</span></button>' +
+    '</div>' +
+  '</div>';
+
+  return '<div class="card">' +
+    h2('drop', 'Novo abastecimento') +
+    (falta.length ? '<div class="msg info">Ainda não há ' + esc(falta.join(' nem ')) +
+      ' cadastrados. Peça ao responsável para cadastrar em <b>Cadastros</b>.</div>' : '') +
+    '<div class="steps">' + passo(1, 'Máquina', 'truck') + passo(2, 'Talhões', 'map') + passo(3, 'Abastecimento', 'drop') + '</div>' +
+    e1 + e2 + e3 +
+    '<div id="msgBox">' + (S.msg ? '<div class="msg ' + S.msg.t + '">' + S.msg.x + '</div>' : '') + '</div>' +
+  '</div>';
+}
+
+function telaRegistros(){
+  const regs = todosRegistros();
+  if (!regs.length) return '<div class="card">' + h2('list', 'Registros') +
+    '<div class="empty">Nenhum abastecimento registrado ainda.</div></div>';
+
+  const linhas = regs.slice(0, 300).map(r => {
+    const t = (r.talhoes || []).map(x => x.nome).join(', ');
+    return '<tr>' +
+      '<td>' + dataBR(r.dateStr) + '</td><td>' + esc(r.timeStr || '') + '</td>' +
+      '<td>' + esc(r.employeeName || '') + '</td>' +
+      '<td>' + esc(r.farm || '') + '</td>' +
+      '<td>' + esc(r.machine || '') + '</td>' +
+      '<td>' + esc(r.operationType || '') + '</td>' +
+      '<td>' + esc(t) + '</td>' +
+      '<td class="num">' + num(r.totalHa) + '</td>' +
+      '<td class="num">' + num(r.liters) + '</td>' +
+      '<td class="num">' + num(r.hourmeter) + '</td>' +
+      '<td>' + (r._pendente ? '<span class="badge">na fila</span>' : '') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  return '<div class="card">' +
+    h2('list', 'Registros', '<span class="badge">' + regs.length + '</span>') +
+    '<button class="btn sec" id="csvBtn">' + ic('down') + '<span>Baixar planilha (CSV)</span></button>' +
+    '<div class="tw"><table><thead><tr><th>Data</th><th>Hora</th><th>Funcionário</th><th>Fazenda</th>' +
+    '<th>Máquina</th><th>Operação</th><th>Talhões</th><th class="num">ha</th><th class="num">Litros</th>' +
+    '<th class="num">Horímetro</th><th></th></tr></thead><tbody>' + linhas + '</tbody></table></div>' +
+  '</div>';
+}
+
+function barras(linhas, unidade){
+  if (!linhas.length) return '<div class="empty">Sem dados no período.</div>';
+  const max = linhas[0].value || 1;
+  const total = linhas.reduce((s, r) => s + r.value, 0);
+  return '<div class="bars">' + linhas.map(r => {
+    const pct = Math.max(2, Math.round((r.value / max) * 100));
+    const share = total ? Math.round((r.value / total) * 100) : 0;
+    return '<div class="bar" title="' + esc(r.label + ': ' + num(r.value) + ' ' + unidade + ' (' + share + '%)') + '">' +
+      '<div class="bar-l">' + esc(r.label) + '</div>' +
+      '<div class="bar-v">' + num(r.value) + ' ' + esc(unidade) + '</div>' +
+      '<div class="bar-t"><div class="bar-f" style="width:' + pct + '%"></div></div></div>';
+  }).join('') + '</div>';
+}
+
+function telaAnalise(){
+  const regs = noPeriodo(todosRegistros().filter(r => !r._pendente));
+  const totalL = regs.reduce((s, r) => s + (Number(r.liters) || 0), 0);
+  const totalHa = regs.reduce((s, r) => s + (Number(r.totalHa) || 0), 0);
+  const cons = consumoPorMaquina(regs);
+  const lha = litrosPorHectare(regs);
+  const av = alertas(regs, cons);
+
+  const op = (v, t) => '<option value="' + v + '"' + (S.periodo === v ? ' selected' : '') + '>' + t + '</option>';
+
+  const balde = {};
+  regs.forEach(r => { if (r.dateStr) balde[r.dateStr] = (balde[r.dateStr] || 0) + (Number(r.liters) || 0); });
+  const dias = Object.keys(balde).sort();
+  const maxD = dias.reduce((s, d) => Math.max(s, balde[d]), 0) || 1;
+  const spark = dias.length ? '<div class="spark">' + dias.map(d =>
+      '<div class="spark-c" title="' + esc(dataBR(d) + ': ' + num(balde[d]) + ' L') + '">' +
+      '<div class="spark-b" style="height:' + Math.max(2, Math.round(balde[d]/maxD*100)) + '%"></div></div>').join('') +
+    '</div><div class="spark-x"><span>' + dataBR(dias[0]) + '</span><span>' + dataBR(dias[dias.length-1]) + '</span></div>'
+    : '<div class="empty">Sem dados no período.</div>';
+
+  const tabCons = cons.length ? '<div class="tw"><table><thead><tr><th>Máquina</th>' +
+    '<th class="num">L/h</th><th class="num">L/ha</th><th class="num">Horas</th><th class="num">Litros</th></tr></thead><tbody>' +
+    cons.map(c => '<tr><td>' + esc(c.maquina) + '</td><td class="num">' + (c.lph ? num(c.lph) : '—') +
+      '</td><td class="num">' + (c.lha ? num(c.lha) : '—') + '</td><td class="num">' + num(c.horas) +
+      '</td><td class="num">' + num(c.litros) + '</td></tr>').join('') + '</tbody></table></div>'
+    : '<div class="empty">Ainda não dá para calcular. É preciso pelo menos dois abastecimentos da mesma máquina com o horímetro anotado.</div>';
+
+  const tabLha = lha.length ? '<div class="tw"><table><thead><tr><th>Talhão</th><th class="num">ha</th>' +
+    '<th class="num">Litros</th><th class="num">L/ha</th></tr></thead><tbody>' +
+    lha.slice(0, 40).map(t => '<tr><td>' + esc(t.nome) + '</td><td class="num">' + num(t.ha) +
+      '</td><td class="num">' + num(t.litros) + '</td><td class="num">' + num(t.lha) + '</td></tr>').join('') +
+    '</tbody></table></div>' : '<div class="empty">Sem talhões abastecidos no período.</div>';
+
+  return '<div class="card">' +
+    h2('chart', 'Análise') +
+    '<p class="hint">Somente leitura. Os litros de cada abastecimento são divididos entre os talhões pela área de cada um.</p>' +
+    '<label>Período</label><div class="fi">' + ic('cal','ii') + '<select id="an_per">' +
+      op('30','Últimos 30 dias') + op('90','Últimos 90 dias') + op('365','Últimos 12 meses') + op('all','Todo o histórico') +
+    '</select></div>' +
+    '<div class="stats" style="margin-top:16px">' +
+      '<div class="stat"><div class="n">' + num(totalL) + ' L</div><div class="l">Total abastecido</div></div>' +
+      '<div class="stat"><div class="n">' + regs.length + '</div><div class="l">Abastecimentos</div></div>' +
+      '<div class="stat"><div class="n">' + num(totalHa) + ' ha</div><div class="l">Hectares atendidos</div></div>' +
+      '<div class="stat"><div class="n">' + (totalHa > 0 ? num(totalL/totalHa) : '—') + ' L/ha</div><div class="l">Média geral</div></div>' +
+    '</div>' +
+  '</div>' +
+  (av.length ? '<div class="card">' + h2('info', 'Pontos de atenção', '<span class="badge">' + av.length + '</span>') +
+    av.map(a => '<div class="msg info" style="display:flex;gap:9px">' + ic('info') + '<div>' + a + '</div></div>').join('') + '</div>' : '') +
+  '<div class="card">' + h2('map', 'Litros por hectare, por talhão') + tabLha + '</div>' +
+  '<div class="card">' + h2('gauge', 'Consumo por máquina') + tabCons + '</div>' +
+  '<div class="an">' +
+    '<div class="card">' + h2('pin', 'Litros por fazenda') + barras(somarPor(regs, 'farm'), 'L') + '</div>' +
+    '<div class="card">' + h2('truck', 'Litros por máquina') + barras(somarPor(regs, 'machine'), 'L') + '</div>' +
+    '<div class="card">' + h2('tag', 'Litros por operação') + barras(somarPor(regs, 'operationType'), 'L') + '</div>' +
+    '<div class="card">' + h2('user', 'Litros por funcionário') + barras(somarPor(regs, 'employeeName'), 'L') + '</div>' +
+  '</div>' +
+  '<div class="card">' + h2('chart', 'Evolução do consumo') + '<div style="margin-top:14px">' + spark + '</div></div>';
+}
+
+function cardLista(titulo, icone, chave, itens, campoExtra){
+  const chips = itens.map(i => '<span class="chip">' + esc(i.nome) +
+    (i.ha != null ? ' <span style="color:var(--text-muted)">· ' + num(i.ha) + ' ha</span>' : '') +
+    '<button data-del="' + esc(chave) + '|' + esc(i.id) + '" title="Remover">&times;</button></span>').join('');
+  return '<div class="card">' + h2(icone, titulo, '<span class="badge">' + itens.length + '</span>') +
+    '<div class="addrow">' +
+      '<div><label>Nome</label><input type="text" data-novo="' + esc(chave) + '" placeholder="Digite e clique em Adicionar"></div>' +
+      (campoExtra ? '<div style="max-width:120px"><label>Hectares</label><input type="number" step="0.0001" data-novoha="' + esc(chave) + '"></div>' : '') +
+      '<button class="btn sm" data-add="' + esc(chave) + '" style="height:44px">' + ic('plus') + '<span>Adicionar</span></button>' +
+    '</div>' +
+    '<div class="chips">' + (chips || '<span class="hint">Nada cadastrado ainda.</span>') + '</div>' +
+  '</div>';
+}
+
+function telaCadastros(){
+  const fazendas = ordNome(lista(S.cfg.farms));
+  const fSel = S.form.farmId || (fazendas[0] || {}).id || '';
+  const tal = fSel ? talhoesDaFazenda(fSel) : [];
+  const totalHa = tal.reduce((s, t) => s + (Number(t.ha) || 0), 0);
+
+  return (S.cadMsg ? '<div class="msg ' + S.cadMsg.t + '" style="margin-bottom:14px">' + esc(S.cadMsg.x) + '</div>' : '') +
+    '<div class="card">' + h2('map', 'Talhões') +
+      '<p class="hint">Selecione a fazenda para ver e editar os talhões dela.</p>' +
+      '<div class="fi">' + ic('pin','ii') + '<select id="cad_farm">' +
+        fazendas.map(f => '<option value="' + esc(f.id) + '"' + (fSel === f.id ? ' selected' : '') + '>' +
+          esc(f.nome) + '</option>').join('') + '</select></div>' +
+      '<div class="addrow">' +
+        '<div><label>Nome do talhão</label><input type="text" id="novoTalhao" placeholder="Ex: Talhão 16"></div>' +
+        '<div style="max-width:130px"><label>Hectares</label><input type="number" step="0.0001" id="novoTalhaoHa"></div>' +
+        '<button class="btn sm" id="addTalhao" style="height:44px">' + ic('plus') + '<span>Adicionar</span></button>' +
+      '</div>' +
+      '<div class="sum"><span>' + tal.length + ' talhão(ões) em ' + esc(nomeFazenda(fSel)) + '</span><span>' + num(totalHa) + ' ha</span></div>' +
+      '<div class="chips">' + (tal.map(t => '<span class="chip">' + esc(t.nome) +
+        ' <span style="color:var(--text-muted)">· ' + num(t.ha) + ' ha</span>' +
+        '<button data-del="talhoes|' + esc(t.id) + '" title="Remover">&times;</button></span>').join('') ||
+        '<span class="hint">Nenhum talhão nesta fazenda.</span>') + '</div>' +
+    '</div>' +
+    '<div class="an">' +
+      cardLista('Máquinas', 'truck', 'machines', ordNome(lista(S.cfg.machines))) +
+      cardLista('Funcionários', 'user', 'employees', ordNome(lista(S.cfg.employees))) +
+      cardLista('Fazendas', 'pin', 'farms', fazendas) +
+      cardLista('Tipos de operação', 'tag', 'operationTypes', ordNome(lista(S.cfg.operationTypes))) +
+    '</div>';
+}
+
+/* ============================================================
+   8. RENDER
+   ============================================================ */
+function render(){
+  const r = $('#root');
+  if (!S.pronto){ r.innerHTML = '<div class="empty" style="padding:60px 20px">Carregando...</div>'; return; }
+  if (!S.user){ r.innerHTML = telaLogin(); ligarLogin(); return; }
+
+  let corpo;
+  if (S.aba === 'registrar') corpo = telaRegistrar();
+  else if (S.aba === 'registros') corpo = telaRegistros();
+  else if (S.aba === 'analise' && S.admin) corpo = telaAnalise();
+  else if (S.aba === 'cadastros' && S.admin) corpo = telaCadastros();
+  else corpo = telaRegistrar();
+
+  r.innerHTML = topo() + abas() + barraSync() + '<div class="content">' + corpo + '</div>' +
+    '<p class="foot">Agro São Francisco · os registros ficam no mesmo banco para toda a equipe.</p>';
+  ligarEventos();
+}
+
+function ligarLogin(){
+  const btn = $('#li_btn');
+  if (!btn) return;
+  const entrar = async () => {
+    const email = ($('#li_email').value || '').trim();
+    const senha = $('#li_senha').value || '';
+    if (!email || !senha){ S.erroLogin = 'Preencha e-mail e senha.'; render(); return; }
+    S.entrando = true; S.erroLogin = null; render();
+    try {
+      await S.backend.signIn(email, senha);
+    } catch(e){
+      const c = (e && e.code) || '';
+      S.erroLogin = c.includes('network') ? 'Sem internet para entrar. Conecte-se uma vez e depois o app funciona offline.'
+        : (c.includes('too-many') ? 'Muitas tentativas. Aguarde um instante.'
+        : 'E-mail ou senha incorretos.');
+      S.entrando = false; render();
+    }
+  };
+  btn.addEventListener('click', entrar);
+  $('#li_senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+}
+
+function irEtapa(n){
+  S.etapa = n;
+  $$('[data-painel]').forEach(p => p.classList.toggle('active', Number(p.getAttribute('data-painel')) === n));
+  $$('[data-etapa]').forEach(b => {
+    const v = Number(b.getAttribute('data-etapa'));
+    b.classList.toggle('active', v === n);
+    b.classList.toggle('done', v < n);
+  });
+}
+function mostrarMsg(t, x){
+  S.msg = x ? { t, x: esc(x) } : null;
+  const box = $('#msgBox');
+  if (box) box.innerHTML = x ? '<div class="msg ' + t + '">' + esc(x) + '</div>' : '';
+}
+function faltaEtapa(n){
+  if (n === 1){
+    if (!S.form.employeeName) return 'Escolha o funcionário.';
+    if (!S.form.farmId) return 'Escolha a fazenda.';
+    if (!S.form.machineId) return 'Escolha a máquina.';
+    if (!S.form.opId) return 'Escolha a operação.';
+  }
+  if (n === 2 && !S.form.talhoes.length) return 'Marque pelo menos um talhão.';
+  if (n === 3){
+    const l = $('#f_lit'), h = $('#f_hor'), d = $('#f_data'), t = $('#f_hora');
+    if (!l || l.value === '' || Number(l.value) <= 0) return 'Informe quantos litros foram abastecidos.';
+    if (!h || h.value === '') return 'Informe o horímetro da máquina.';
+    if (!d || !d.value) return 'Informe a data.';
+    if (!t || !t.value) return 'Informe a hora.';
+  }
+  return null;
+}
+
+function ligarEventos(){
+  $$('[data-aba]').forEach(b => b.addEventListener('click', () => {
+    S.aba = b.getAttribute('data-aba');
+    const ui = ler(K_UI, {}); ui.aba = S.aba; gravar(K_UI, ui);
+    S.msg = null; S.cadMsg = null;
+    if (S.aba === 'registrar') S.etapa = 1;
+    render();
+  }));
+  const sair = $('#sairBtn');
+  if (sair) sair.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (S.outbox.length && !confirm('Há ' + S.outbox.length + ' registro(s) ainda não enviados. Sair mesmo assim?')) return;
+    await S.backend.signOut();
+  });
+
+  if (S.aba === 'registrar') ligarRegistrar();
+  if (S.aba === 'registros') ligarRegistros();
+  if (S.aba === 'analise') ligarAnalise();
+  if (S.aba === 'cadastros') ligarCadastros();
+}
+
+function ligarRegistrar(){
+  $$('[data-etapa]').forEach(b => b.addEventListener('click', () => {
+    mostrarMsg(null, null); irEtapa(Number(b.getAttribute('data-etapa')));
+  }));
+  $$('[data-ir]').forEach(b => b.addEventListener('click', () => {
+    const alvo = Number(b.getAttribute('data-ir'));
+    if (alvo > S.etapa){
+      const p = faltaEtapa(S.etapa);
+      if (p){ mostrarMsg('err', p); return; }
+    }
+    mostrarMsg(null, null); irEtapa(alvo);
+  }));
+
+  const emp = $('#f_emp');
+  if (emp) emp.addEventListener('change', () => {
+    S.form.employeeName = emp.value;
+    const ui = ler(K_UI, {}); ui.ultimoFuncionario = emp.value; gravar(K_UI, ui);
+  });
+  const farm = $('#f_farm');
+  if (farm) farm.addEventListener('change', () => {
+    // Trocar de fazenda invalida os talhões já marcados: eles são de outra área.
+    S.form.farmId = farm.value; S.form.talhoes = []; S.form.busca = '';
+    render();
+  });
+  const mach = $('#f_mach');
+  if (mach) mach.addEventListener('change', () => { S.form.machineId = mach.value; });
+  const op = $('#f_op');
+  if (op) op.addEventListener('change', () => { S.form.opId = op.value; });
+
+  const busca = $('#f_busca');
+  if (busca) busca.addEventListener('input', () => {
+    S.form.busca = busca.value;
+    const pos = busca.selectionStart;
+    render();
+    const b2 = $('#f_busca');
+    if (b2){ b2.focus(); try { b2.setSelectionRange(pos, pos); } catch(e){} }
+  });
+  $$('[data-talhao]').forEach(cb => cb.addEventListener('change', () => {
+    const id = cb.getAttribute('data-talhao');
+    if (cb.checked){ if (!S.form.talhoes.includes(id)) S.form.talhoes.push(id); }
+    else S.form.talhoes = S.form.talhoes.filter(x => x !== id);
+    render();
+  }));
+
+  const salvar = $('#salvarBtn');
+  if (salvar) salvar.addEventListener('click', () => {
+    for (let n = 1; n <= 3; n++){
+      const p = faltaEtapa(n);
+      if (p){ irEtapa(n); mostrarMsg('err', p); return; }
+    }
+    const litros = Number($('#f_lit').value);
+    const talhoes = S.form.talhoes
+      .map(id => Object.assign({ id }, S.cfg.talhoes[id]))
+      .filter(t => t.nome);
+    const rateados = ratear(litros, talhoes.map(t => ({ id:t.id, nome:t.nome, ha:Number(t.ha) || 0 })));
+    const totalHa = rateados.reduce((s, t) => s + t.ha, 0);
+
+    const rec = {
+      employeeName: S.form.employeeName,
+      farm: nomeFazenda(S.form.farmId),
+      machine: (S.cfg.machines[S.form.machineId] || {}).nome || '',
+      operationType: (S.cfg.operationTypes[S.form.opId] || {}).nome || '',
+      liters: litros,
+      hourmeter: Number($('#f_hor').value),
+      dateStr: $('#f_data').value,
+      timeStr: $('#f_hora').value,
+      notes: ($('#f_obs').value || '').trim(),
+      totalHa: Math.round(totalHa * 1e6) / 1e6,
+      talhoes: rateados,
+      createdAt: Date.now(),
+      clientId: 'c' + Math.random().toString(36).slice(2, 10)
+    };
+    if (!rec.notes) delete rec.notes;
+
+    const id = uid();
+    enfileirar(id, rec);
+    S.form.talhoes = []; S.form.busca = '';
+    S.etapa = 1;
+    S.msg = { t:'ok', x: 'Abastecimento registrado! ' + num(litros) + ' L em ' +
+      rateados.length + ' talhão(ões), ' + num(totalHa) + ' ha.' +
+      (navigator.onLine ? '' : ' Vai subir quando o sinal voltar.') };
+    render();
+    enviarFila();
+  });
+}
+
+function ligarRegistros(){
+  const b = $('#csvBtn');
+  if (b) b.addEventListener('click', baixarCSV);
+}
+function ligarAnalise(){
+  const p = $('#an_per');
+  if (p) p.addEventListener('change', () => { S.periodo = p.value; render(); });
+}
+
+function ligarCadastros(){
+  const cf = $('#cad_farm');
+  if (cf) cf.addEventListener('change', () => { S.form.farmId = cf.value; render(); });
+
+  const addTal = $('#addTalhao');
+  if (addTal) addTal.addEventListener('click', async () => {
+    const nome = ($('#novoTalhao').value || '').trim();
+    const ha = Number($('#novoTalhaoHa').value);
+    const fid = ($('#cad_farm') || {}).value || '';
+    if (!nome || !fid){ S.cadMsg = { t:'err', x:'Informe o nome do talhão.' }; render(); return; }
+    if (!(ha > 0)){ S.cadMsg = { t:'err', x:'Informe os hectares do talhão — é o que permite calcular litros por hectare.' }; render(); return; }
+    await salvarCfg('talhoes', novoId('t', nome, fid), { nome, ha, farmId: fid }, 'Talhão adicionado.');
+  });
+
+  $$('[data-add]').forEach(b => b.addEventListener('click', async () => {
+    const chave = b.getAttribute('data-add');
+    const campo = $('[data-novo="' + chave + '"]');
+    const nome = ((campo || {}).value || '').trim();
+    if (!nome){ S.cadMsg = { t:'err', x:'Digite o nome antes de adicionar.' }; render(); return; }
+    await salvarCfg(chave, novoId(chave[0], nome, ''), { nome }, 'Adicionado.');
+  }));
+
+  $$('[data-del]').forEach(b => b.addEventListener('click', async () => {
+    const [chave, id] = b.getAttribute('data-del').split('|');
+    if (!confirm('Remover este item? Os registros já lançados não são alterados.')) return;
+    await salvarCfg(chave, id, null, 'Removido.');
+  }));
+}
+
+function novoId(prefixo, nome, fid){
+  const base = nome.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '').toLowerCase() || 'x';
+  return prefixo + '_' + (fid ? fid.replace(/^f_/, '') + '__' : '') + base + '_' + Math.random().toString(36).slice(2, 6);
+}
+async function salvarCfg(chave, id, valor, okMsg){
+  try {
+    await S.backend.gravarConfig(chave + '/' + id, valor);
+    S.cadMsg = { t:'ok', x: okMsg };
+  } catch(e){
+    S.cadMsg = { t:'err', x:'Não foi possível salvar. Verifique a internet e se você está logado como administrador.' };
+  }
+  render();
+}
+
+function baixarCSV(){
+  const regs = todosRegistros();
+  const linhas = ['Data;Hora;Funcionário;Fazenda;Máquina;Operação;Talhões;Hectares;Litros;Horímetro;L/ha;Observações'];
+  regs.forEach(r => {
+    const t = (r.talhoes || []).map(x => x.nome).join(' + ');
+    const lha = Number(r.totalHa) > 0 ? (Number(r.liters) / Number(r.totalHa)) : '';
+    const cols = [dataBR(r.dateStr), r.timeStr || '', r.employeeName || '', r.farm || '', r.machine || '',
+      r.operationType || '', t, num(r.totalHa), num(r.liters), num(r.hourmeter),
+      lha === '' ? '' : num(lha), r.notes || ''];
+    linhas.push(cols.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(';'));
+  });
+  const csv = '﻿' + linhas.join('\r\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'abastecimentos-' + agora().date + '.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ============================================================
+   9. PARTIDA
+   ============================================================ */
+async function iniciar(){
+  S.backend = await criarBackend();
+
+  window.addEventListener('online', () => { S.online = true; render(); enviarFila(); });
+  window.addEventListener('offline', () => { S.online = false; render(); });
+
+  S.backend.onAuth(async (u) => {
+    S.user = u || null;
+    S.pronto = true;
+    S.entrando = false;
+    if (!u){ S.admin = false; S.registros = {}; render(); return; }
+
+    S.admin = await S.backend.ehAdmin(u.uid);
+
+    S.backend.ouvirConfig(cfg => {
+      S.cfg = {
+        farms: cfg.farms || {}, talhoes: cfg.talhoes || {}, machines: cfg.machines || {},
+        operationTypes: cfg.operationTypes || {}, employees: cfg.employees || {}
+      };
+      gravar(K_CFG, S.cfg);
+      render();
+    });
+
+    // Admin enxerga tudo; a equipe enxerga o que a conta dela lançou.
+    S.backend.ouvirRegistros(S.admin ? 'records' : 'records/' + u.uid, val => {
+      const plano = {};
+      if (S.admin){
+        Object.keys(val || {}).forEach(uidDono =>
+          Object.keys(val[uidDono] || {}).forEach(id => { plano[id] = val[uidDono][id]; }));
+      } else {
+        Object.keys(val || {}).forEach(id => { plano[id] = val[id]; });
+      }
+      S.registros = plano;
+      render();
+    });
+
+    render();
+    enviarFila();
+  });
+
+  render();
+  setInterval(enviarFila, 30000);
+}
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+window.__APP__ = { S, ratear, litrosPorHectare, consumoPorMaquina, somarPor, alertas, enviarFila, render };
+iniciar();
+</script>
 </body>
 </html>
